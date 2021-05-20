@@ -1,7 +1,7 @@
 import "./ExpenseForm.css";
 import {useState} from "react";
 
-const ExpenseForm = () => {
+const ExpenseForm = (props) => {
 // This is used if you wanted combined state and to ensure previous state when using fill
 	// const [userInput, setUserInput] = useState({
 	// 	enteredTitle: "",
@@ -58,7 +58,8 @@ const ExpenseForm = () => {
 			date: new Date(enteredDate),
 		};
 
-		console.log(expenseData);
+		props.onSaveExpenseData(expenseData);
+
 		setEnteredTitle("");
 		setEnteredAmount("");
 		setEnteredDate("");
