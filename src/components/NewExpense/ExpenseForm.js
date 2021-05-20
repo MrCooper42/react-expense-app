@@ -2,42 +2,10 @@ import "./ExpenseForm.css";
 import {useState} from "react";
 
 const ExpenseForm = (props) => {
-// This is used if you wanted combined state and to ensure previous state when using fill
-	// const [userInput, setUserInput] = useState({
-	// 	enteredTitle: "",
-	// 	enteredAmount: "",
-	// 	enteredDate: "",
-	// });
-	//
-	// const titleChangeHandler = (event) => {
-	// 	setUserInput((prevState) => {
-	// 		return {
-	// 			...prevState,
-	// 			enteredTitle: event.target.value,
-	// 		};
-	// 	});
-	// };
-	// const amountChangeHandler = (event) => {
-	// 	setUserInput((prevState) => {
-	// 		return {
-	// 			...prevState,
-	// 			enteredAmount: event.target.value,
-	// 		};
-	// 	});
-	// };
-	// const dateChangeHandler = (event) => {
-	// 	setUserInput((prevState) => {
-	// 		return {
-	// 			...prevState,
-	// 			enteredDate: event.target.value,
-	// 		};
-	// 	});
-	// };
-
-
 	const [enteredTitle, setEnteredTitle] = useState("");
 	const [enteredAmount, setEnteredAmount] = useState("");
 	const [enteredDate, setEnteredDate] = useState("");
+	const [showForm, setShowForm] = useState(false);
 
 	const titleChangeHandler = (event) => {
 		setEnteredTitle(event.target.value);
@@ -49,21 +17,40 @@ const ExpenseForm = (props) => {
 		setEnteredDate(event.target.value);
 	};
 
+	function clearForm() {
+		setEnteredTitle("");
+		setEnteredAmount("");
+		setEnteredDate("");
+	}
+
 	const submitHandler = (event) => {
 		event.preventDefault();
 
 		const expenseData = {
 			title: enteredTitle,
-			amount: enteredAmount,
+			amount: +enteredAmount,
 			date: new Date(enteredDate),
 		};
 
 		props.onSaveExpenseData(expenseData);
 
-		setEnteredTitle("");
-		setEnteredAmount("");
-		setEnteredDate("");
+		clearForm();
 	};
+
+	const isValid = enteredTitle !== "" && enteredAmount !== "" && enteredDate !== "";
+
+	const toggleShowForm = () => {
+		clearForm();
+		setShowForm((prevShowForm) => {
+			return !prevShowForm;
+		});
+	};
+
+	if (!showForm) {
+		return (
+			<button type="button" onClick={toggleShowForm}>Add New Expense</button>
+		);
+	}
 
 	return (
 		<form onSubmit={submitHandler}>
@@ -98,7 +85,8 @@ const ExpenseForm = (props) => {
 				</div>
 			</div>
 			<div className="new-expense__actions">
-				<button type="submit">Add Expense</button>
+				<button type="button" onClick={toggleShowForm}>Cancel</button>
+				<button type="submit" disabled={!isValid}>Add Expense</button>
 			</div>
 		</form>
 	);
